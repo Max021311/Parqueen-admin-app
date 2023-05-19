@@ -11,7 +11,7 @@
         type="email"
         id="user"
         label="Usuario:"
-        v-model="user"
+        v-model="email"
         placeholder="example@example.com"
         required
       />
@@ -21,9 +21,10 @@
         id="password"
         label="Contraseña:"
         v-model="password"
+        minlength="8"
         required
       />
-      <Button color="primary" class="w-full" type="submit">Iniciar sesión</Button>
+      <Button color="primary" class="" type="submit" :disabled="isDisabled">Iniciar sesión</Button>
       <Message v-show="showMessage" type="error" title="Error" description="Ha sucedido un error intentando iniciar sesión" />
     </form>
     </Card>
@@ -37,27 +38,58 @@
   import Card from './../components/Card.vue'
   import { ref } from 'vue'
   import { useRouter, useRoute } from 'vue-router'
+  import axios from './../common/axios'
+  import { isAxiosError } from 'axios'
+  import { Ref } from 'vue'
+
 
   const route = useRoute()
   const router = useRouter()
-  let user = ref('')
+  let email = ref('')
   let password = ref('')
   let showMessage = ref(false)
+  let messageDescription = ref('')
+  let isDisabled = ref(false)
+  let timeout: Ref<number | null> = ref(null)
 
-  function submit (event: Event) {
+  async function submit (event: Event) {
     event.preventDefault()
-    localStorage.setItem(
-      'credential',
-      JSON.stringify({ user: user.value, password: password.value })
-    )
-    if (typeof route.query?.redirect === 'string') {
-      router.push({ path: route.query.redirect })
-    } else {
-      router.push({ path: '/' })
+    
+    try {
+      isDisabled.value = true
+      const res = await axios.post<{ token: string }>('/auth', { email: email.value, password: password.value })
+      isDisabled.value = false
+    
+      if (res.status === 200) {
+        localStorage.setItem('token', res.data.token)
+      }
+
+      if (typeof route.query?.redirect === 'string') {
+        router.push({ path: route.query.redirect })
+      } else {
+        router.push({ path: '/' })
+      }
+    } catch (err) {
+      if (timeout.value !== null) {
+        window.clearTimeout(timeout.value)
+      }
+
+      isDisabled.value = false
+      console.error(err)
+
+      if (isAxiosError(err) && err.status === 401) {
+        console.log(err.response)
+        messageDescription.value = 'Usuario o contraseña incorrecto'
+        showMessage.value = true
+      } else {
+        messageDescription.value = 'Algo sucedio, intentalo de nuevo. Si el problema persiste contacta a soporte'
+        showMessage.value = true
+      }
+
+      timeout.value = window.setTimeout(() => {
+        timeout.value = null
+        showMessage.value = false
+      }, 1000 * 5)
     }
-    // showMessage.value = true
-    // setTimeout(() => {
-    //   showMessage.value = false
-    // }, 1000 * 5)
   }
 </script>
