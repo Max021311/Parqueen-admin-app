@@ -10,13 +10,13 @@
       :value="modelValue"
       :placeholder="placeholder ?? ''"
       @input="handler"
+      :minlength="minlength"
       required
     >
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
 
 const emit = defineEmits(['update:modelValue'])
 defineProps<{
@@ -25,7 +25,8 @@ defineProps<{
   modelValue: any,
   label: string,
   placeholder?: string,
-  required?: boolean
+  required?: boolean,
+  minlength?: string
 }>()
 
 function handler (event: Event) {

@@ -2,7 +2,7 @@
   <button
     :class="[
       'border rounded-md px-5 disabled:opacity-50 w-fit h-8',
-      classes
+      buttonStyle
     ]"
   >
     <slot />
@@ -18,10 +18,10 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const classesDictionary = {
+const buttonStyles = {
   primary: 'bg-emerald-500 text-black dark:text-white border-emerald-300',
-  secondary: 'bg-gray-100 dark:bg-gray-700 text-black dark:text-white border-gray-500 dark:border-gray-600 '
+  secondary: 'bg-gray-100 dark:bg-gray-700 text-black dark:text-white border-gray-500 dark:border-gray-600'
 }
 
-const classes = computed(() => classesDictionary[props.color])
+const buttonStyle = computed(() => buttonStyles[props.color])
 </script>
