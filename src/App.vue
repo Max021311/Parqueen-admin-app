@@ -7,7 +7,7 @@ const route = useRoute()
 const router = useRouter()
 
 function logOut() {
-  localStorage.removeItem('credential')
+  localStorage.removeItem('token')
   router.push({ path: '/login' })
 }
 </script>
