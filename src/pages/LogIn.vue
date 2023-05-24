@@ -24,8 +24,16 @@
         minlength="8"
         required
       />
-      <Button color="primary" class="" type="submit" :disabled="isDisabled">Iniciar sesión</Button>
-      <Message v-show="showMessage" type="error" title="Error" description="Ha sucedido un error intentando iniciar sesión" />
+      <Button color="primary" class="flex justify-center items-center" type="submit" :disabled="isDisabled">
+        <span :class="!isDisabled ? 'visible' : 'invisible'">
+          Iniciar sesión
+        </span>
+        <Spinner :class="[
+          'fixed',
+          isDisabled ? 'visible' : 'invisible'
+        ]" />
+      </Button>
+      <Message v-show="showMessage" type="error" title="Error" :description="messageDescription" />
     </form>
     </Card>
   </div>
@@ -36,6 +44,7 @@
   import Button from './../components/Button.vue'
   import Message from './../components/Message.vue'
   import Card from './../components/Card.vue'
+  import Spinner from './../components/Spinner.vue'
   import { ref } from 'vue'
   import { useRouter, useRoute } from 'vue-router'
   import axios from './../common/axios'
@@ -57,6 +66,7 @@
     
     try {
       isDisabled.value = true
+      // await new Promise(resolve => setTimeout(resolve, 50000))
       const res = await axios.post<{ token: string }>('/auth', { email: email.value, password: password.value })
       isDisabled.value = false
     
@@ -77,7 +87,7 @@
       isDisabled.value = false
       console.error(err)
 
-      if (isAxiosError(err) && err.status === 401) {
+      if (isAxiosError(err) && err?.response?.status === 401) {
         console.log(err.response)
         messageDescription.value = 'Usuario o contraseña incorrecto'
         showMessage.value = true
