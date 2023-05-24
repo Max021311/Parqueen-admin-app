@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed } from 'vue'
+  import { computed, ref } from 'vue'
   import Toggle from './Toggle.vue'
   import EditIcon from './EditIcon.vue'
   import InfoIcon from './InfoIcon.vue'
@@ -7,9 +7,25 @@
   import TruckIcon from './icons/vehicle/TruckIcon.vue'
   import WorkerIcon from './icons/vehicle/WorkerIcon.vue'
   import WheelChairIcon from './icons/vehicle/WheelChairIcon.vue'
+  import axios from './../common/axios'
 
   const props = defineProps<{ value: ParkingPlace }>()
   const isTaken = computed(() => Array.isArray(props.value.tickets) && props.value.tickets.length > 0)
+  let isFetching = ref<boolean>(false)
+
+  async function toggleActiveState (newState: boolean) {
+    if (isFetching.value) { return }
+    isFetching.value = true
+    try {
+      await axios.put('/parking-place/' + props.value.id, {
+        isActive: newState
+      }) 
+      props.value.isActive = newState
+    } catch (err) {
+      console.error(err)
+    }
+    isFetching.value = false
+  }
 </script>
 
 <template>
@@ -19,7 +35,7 @@
         <span>{{ value.slug }}</span>
       </div>
       <div class="flex justify-self-end items-center gap-2">
-        <Toggle v-model="value.isActive"/>
+        <Toggle :value="value.isActive" @click="toggleActiveState"/>
         <EditIcon class="w-6 h-6" />
         <InfoIcon class="w-6 h-6"/>
       </div>
