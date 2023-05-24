@@ -18,20 +18,22 @@
   import Button from './Button.vue'
 
   interface Props {
-    modelValue: boolean
+    value: boolean
   }
 
   const props = withDefaults(
     defineProps<Props>(),
-    { modelValue: false }
+    { value: false }
   )
 
-  const emit = defineEmits(['update:modelValue'])
+  const emit = defineEmits<{
+    (e: 'click', value: boolean): void
+  }>()
 
-  const buttonClass = computed(() => props.modelValue ? 'bg-emerald-500' : 'bg-gray-100')
-  const circleClass = computed(() => props.modelValue ? 'translate-x-5' : 'translate-x-0')
+  const buttonClass = computed(() => props.value ? 'bg-emerald-500' : 'bg-gray-100')
+  const circleClass = computed(() => props.value ? 'translate-x-5' : 'translate-x-0')
 
   function handleClick () {
-    emit('update:modelValue', !props.modelValue)
+    emit('click', !props.value)
   }
 </script>
