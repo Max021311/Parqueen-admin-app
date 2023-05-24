@@ -14,11 +14,16 @@
   let isFetching = ref<boolean>(false)
 
   async function toggleActiveState (newState: boolean) {
+    const token = localStorage.getItem('token') as string
     if (isFetching.value) { return }
     isFetching.value = true
     try {
       await axios.put('/parking-place/' + props.value.id, {
         isActive: newState
+      }, {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
       }) 
       props.value.isActive = newState
     } catch (err) {
