@@ -6,6 +6,9 @@
   import { useRouter } from 'vue-router'
   import axios from './../common/axios'
   import Spinner from './../components/Spinner.vue'
+  import { useLogging } from './../composables/use-logging'
+
+  useLogging()
 
   const parkinPlace = ref<{ state: boolean }>({ state: false })
   const router = useRouter()
