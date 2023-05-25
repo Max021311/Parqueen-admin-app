@@ -5,13 +5,15 @@ import App from './App.vue'
 import Home from './pages/Home.vue'
 import LogIn from './pages/LogIn.vue'
 import ParkingPlaces from './pages/ParkingPlaces.vue'
+import ParkingPlace from './pages/ParkingPlace.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', component: Home },
     { path: '/login', component: LogIn, name: 'LogIn' },
-    { path: '/parking-places', component: ParkingPlaces, name: 'ParkingPlaces' }
+    { path: '/parking-places', component: ParkingPlaces, name: 'ParkingPlaces' },
+    { path: '/parking-place', component: ParkingPlace, name: 'ParkingPlace' }
   ]
 })
 
