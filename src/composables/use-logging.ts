@@ -12,7 +12,7 @@ export function useLogging () {
         Authorization: 'Bearer ' + token
       }
     })
-    if (route.name !== 'logging' && token === null && res.status !== 200) {
+    if (route.name !== 'LogIn' && token === null && res.status !== 200) {
       router.push({ name: 'LogIn', query: { redirect: route.path } })
     }
   })
