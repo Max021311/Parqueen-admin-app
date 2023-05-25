@@ -1,6 +1,6 @@
 interface ParkingPlace {
   id: number
-  slug: number
+  slug: string
   type: 'normal'|'big'|'worker'|"special"
   position: {
     type: 'Point'
