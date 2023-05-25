@@ -4,4 +4,4 @@
   </svg>
 </template>
 
-<script setup lant="ts"></script>
+<script setup lang="ts"></script>
