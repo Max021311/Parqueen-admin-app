@@ -7,7 +7,9 @@
 
 <template>
   <Card class="m-4 h-full flex flex-col gap-4">
-    <Button color="primary" class="w-full">Crear lugar</Button>
+    <RouterLink to="/parking-place?behavior=create">
+      <Button color="primary" class="w-full">Crear lugar</Button>
+    </RouterLink>
     <RouterLink to="/parking-places">
       <Button color="primary" class="w-full">
           Listado de lugares

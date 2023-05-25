@@ -8,6 +8,9 @@
   import WorkerIcon from './icons/vehicle/WorkerIcon.vue'
   import WheelChairIcon from './icons/vehicle/WheelChairIcon.vue'
   import axios from './../common/axios'
+  import { useRouter } from 'vue-router'
+
+  const router = useRouter()
 
   const props = defineProps<{ value: ParkingPlace }>()
   const isTaken = computed(() => Array.isArray(props.value.tickets) && props.value.tickets.length > 0)
@@ -40,8 +43,14 @@
         <span>{{ value.slug }}</span>
       </div>
       <div class="flex justify-self-end items-center gap-2">
-        <Toggle :value="value.isActive" @click="toggleActiveState"/>
-        <EditIcon class="w-6 h-6" />
+        <Toggle
+          :modelValue="value.isActive"
+          @update:model-value="toggleActiveState"
+        />
+        <EditIcon
+          @click="router.push({ path: '/parking-place', query: { behavior: 'update', id: value.id } })"
+          class="w-6 h-6"
+        />
         <InfoIcon class="w-6 h-6"/>
       </div>
     </div>
