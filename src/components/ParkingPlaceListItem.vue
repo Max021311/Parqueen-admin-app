@@ -13,6 +13,9 @@
   const router = useRouter()
 
   const props = defineProps<{ value: ParkingPlace }>()
+  const ticket = Array.isArray(props.value.tickets) && props.value.tickets[0]
+    ? props.value.tickets[0]
+    : null
   const isTaken = computed(() => Array.isArray(props.value.tickets) && props.value.tickets.length > 0)
   let isFetching = ref<boolean>(false)
 
@@ -34,6 +37,11 @@
     }
     isFetching.value = false
   }
+
+  function navigateToTicket () {
+    if (ticket === null) { return }
+    router.push('/ticket/' + ticket.id)
+  }
 </script>
 
 <template>
@@ -49,9 +57,15 @@
         />
         <EditIcon
           @click="router.push({ path: '/parking-place', query: { behavior: 'update', id: value.id } })"
-          class="w-6 h-6"
+          class="w-6 h-6 cursor-pointer"
         />
-        <InfoIcon class="w-6 h-6"/>
+        <InfoIcon
+          @click="navigateToTicket"
+          :class="[
+            'w-6 h-6 cursor-not-allowed',
+            ticket === null ? 'opacity-50' : 'cursor-pointer'
+          ]"
+        />
       </div>
     </div>
     <div
